@@ -20,54 +20,54 @@
 
         DPEAButton:
             id: auto
-            color: 0.917, 0.796, 0.380, 1 #golden yellow
+            color: 255, 255, 0, 1 #yellow
             text: "Start"
             center_x: root.width * 0.5
             y: root.height * 0.55
             background_color: 1, 0, 0, 0
             background_normal: ''
             size_hint: None,None
-            size: 300,100
+            size: 250,100
             on_press: root.auto()
             on_release: root.resetColors()
 
         # Turn on/off gate
         DPEAButton:
             id: gate
-            color: 0.180, 0.188, 0.980, 1 #bright blue
+            color: 0, 0, 255, 1 #blue
             text: "Open Gate"
             center_x: root.width * 0.25
             y: root.height * 0.35
             background_color: 0, 0, 0, 0
             background_normal: ''
             size_hint: None,None
-            size: 300,100
+            size: 250,100
             on_press: root.toggleGate()
             on_release: root.resetColors()
 
         DPEAButton:
             id: ramp
-            color: 0.180, 0.188, 0.980, 1 #bright blue
+            color: 0, 0, 255, 1 #blue
             text: "Ramp to Top"
             center_x: root.width * 0.5
             y: root.height * 0.35
             background_color: 0, 0, 0, 0
             background_normal: ''
             size_hint: None,None
-            size: 300,100
+            size: 250,100
             on_press: root.toggleRamp()
             on_release: root.resetColors()
 
         DPEAButton:
             id: staircase
-            color: 0.180, 0.188, 0.980, 1 #bright blue
+            color: 0, 0, 255, 1 #blue
             text: "Staircase On"
             center_x: root.width * 0.75
             y: root.height * 0.35
             background_color: 0, 0, 0, 0
             background_normal: ''
             size_hint: None,None
-            size: 300,100
+            size: 250,100
             on_press: root.toggleStaircase()
             on_release: root.resetColors()
 

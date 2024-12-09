@@ -85,7 +85,6 @@ sm = ScreenManager()
 # ////////////////////////////////////////////////////////////////
 
 
-
 # ////////////////////////////////////////////////////////////////
 # //        DEFINE MAINSCREEN CLASS THAT KIVY RECOGNIZES        //
 # //                                                            //
@@ -95,29 +94,44 @@ sm = ScreenManager()
 # //   SHOULD REFERENCE MAIN FUNCTIONS WITHIN THESE FUNCTIONS   //
 # //      SHOULD NOT INTERACT DIRECTLY WITH THE HARDWARE        //
 # ////////////////////////////////////////////////////////////////
-# class mainFunction():
-#     def debounce(self):
-#     def openGate(self):
-#     def turnOnStaircase(self):
-#     def moveRamp(self):
-#     def setRampSpeed(self):
-#     def setStaircaseSpeed(self):
-#     def isBallAtBottomOfRamp(self):
-#     def isBallAtTopOfRamp(self):
-#
-
-
-
 class MainScreen(Screen):
     staircaseSpeedText = '0'
     rampSpeed = INIT_RAMP_SPEED
     staircaseSpeed = 40
+
+    # def debounce(self):
+    def openGate(self):
+        dpiComputer = DPiComputer()
+        dpiComputer.initialize()
+
+        if not self.ids.gate.text:
+            i = 0
+            servo_number = 0
+            for i in range (90): #opens the gate
+                dpiComputer.writeServo(servo_number, i)
+                sleep(.01)
+        else:
+            dpiComputer = DPiComputer()
+            dpiComputer.initialize()
+            i = 0
+            servo_number = 0
+            for i in range(180, 0, -1): #closes the gate to original position
+                dpiComputer.writeServo(servo_number, i)
+                sleep(.01)
+
+    # def turnOnStaircase(self):
+    # def moveRamp(self):
+    # def setRampSpeed(self):
+    # def setStaircaseSpeed(self):
+    # def isBallAtBottomOfRamp(self):
+    # def isBallAtTopOfRamp(self):
 
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.initialize()
 
     def toggleGate(self):
+        self.openGate()
         print("Open and Close gate here")
 
     def toggleStaircase(self):
