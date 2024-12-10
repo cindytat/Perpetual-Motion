@@ -7,6 +7,8 @@ import sys
 import time
 import threading
 
+from pygame.draw_py import draw_polygon
+
 os.environ["DISPLAY"] = ":0.0"
 
 from kivy.app import App
@@ -78,6 +80,16 @@ Window.clearcolor = (.1, .1, .1, 1)  # (WHITE)
 # ////////////////////////////////////////////////////////////////
 sm = ScreenManager()
 
+#Servo motor
+dpiComputer = DPiComputer()
+dpiComputer.initialize()
+
+#Stepper
+dpiStepper = DPiStepper()
+dpiStepper.setBoardNumber(0)
+stepper_num = 0
+if not dpiStepper.initialize():
+    print("Communication with the DPiStepper board failed")
 
 # ////////////////////////////////////////////////////////////////
 # //                       MAIN FUNCTIONS                       //
@@ -98,12 +110,12 @@ class MainScreen(Screen):
     staircaseSpeedText = '0'
     rampSpeed = INIT_RAMP_SPEED
     staircaseSpeed = 40
+    gate = False
+    stair = False
+    step = False
 
     # def debounce(self):
     def openGate(self):
-        dpiComputer = DPiComputer()
-        dpiComputer.initialize()
-
         if not self.ids.gate.text:
             i = 0
             servo_number = 0
@@ -111,16 +123,28 @@ class MainScreen(Screen):
                 dpiComputer.writeServo(servo_number, i)
                 sleep(.01)
         else:
-            dpiComputer = DPiComputer()
-            dpiComputer.initialize()
             i = 0
             servo_number = 0
             for i in range(180, 0, -1): #closes the gate to original position
                 dpiComputer.writeServo(servo_number, i)
                 sleep(.01)
 
-    # def turnOnStaircase(self):
-    # def moveRamp(self):
+    def turnOnStaircase(self):
+        servo_number = 1
+        if not self.stair:
+            dpiComputer.writeServo(servo_number, 180)
+            self.stair = True
+        else:
+            dpiComputer.writeServo(servo_number, 90)
+            self.stair = False
+
+    def moveRamp(self):
+        dpiStepper.enableMotors(True)
+        dpiStepper.moveToRelativePositionInSteps(stepper_num, -42000, True)
+        dpiStepper.moveToHomeInSteps(stepper_num, 1, 2000,45000)
+        #self.step = False
+        dpiStepper.enableMotors(False)
+
     # def setRampSpeed(self):
     # def setStaircaseSpeed(self):
     # def isBallAtBottomOfRamp(self):
@@ -135,9 +159,11 @@ class MainScreen(Screen):
         print("Open and Close gate here")
 
     def toggleStaircase(self):
+        self.turnOnStaircase()
         print("Turn on and off staircase here")
 
     def toggleRamp(self):
+        self.moveRamp()
         print("Move ramp up and down here")
 
     def auto(self):
