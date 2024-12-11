@@ -6,6 +6,7 @@ import math
 import sys
 import time
 import threading
+from platform import machine
 
 from pygame.draw_py import draw_polygon
 
@@ -55,8 +56,8 @@ HOME = True
 TOP = False
 OPEN = False
 CLOSE = True
-YELLOW = .180, 0.188, 0.980, 1
-BLUE = 0.917, 0.796, 0.380, 1
+YELLOW = 0.917, 0.796, 0.380, 1
+BLUE = .180, 0.188, 0.980, 1
 DEBOUNCE = 0.1
 INIT_RAMP_SPEED = 2
 RAMP_LENGTH = 725
@@ -91,6 +92,10 @@ stepper_num = 0
 if not dpiStepper.initialize():
     print("Communication with the DPiStepper board failed")
 
+#ramp speed stuff
+speed_steps_per_second = 1600 * 10
+accel_steps_per_second_per_second = speed_steps_per_second
+
 # ////////////////////////////////////////////////////////////////
 # //                       MAIN FUNCTIONS                       //
 # //             SHOULD INTERACT DIRECTLY WITH HARDWARE         //
@@ -113,8 +118,11 @@ class MainScreen(Screen):
     gate = False
     stair = False
     step = False
+    max_rampspeed = 200
+    max_staircasespeed = 50
+    rampSpeed = max_rampspeed
+    staircaseSpeed = max_staircasespeed
 
-    # def debounce(self):
     def openGate(self):
         if not self.ids.gate.text:
             i = 0
@@ -130,29 +138,35 @@ class MainScreen(Screen):
                 sleep(.01)
 
     def turnOnStaircase(self):
+        speed_steps_per_second = (round(90 * (self.staircaseSpeed/self.max_staircasespeed) + 90))
         servo_number = 1
         if not self.stair:
-            dpiComputer.writeServo(servo_number, 180)
+            dpiComputer.writeServo(servo_number, speed_steps_per_second)
             self.stair = True
         else:
             dpiComputer.writeServo(servo_number, 90)
             self.stair = False
 
     def moveRamp(self):
+        speed_steps_per_second = 1600 * (8 * (self.rampSpeed/self.max_rampspeed) + 2)
         dpiStepper.enableMotors(True)
-        dpiStepper.moveToRelativePositionInSteps(stepper_num, -42000, True)
-        dpiStepper.moveToHomeInSteps(stepper_num, 1, 2000,45000)
-        #self.step = False
+        dpiStepper.setSpeedInStepsPerSecond(0, speed_steps_per_second)
+        dpiStepper.setAccelerationInStepsPerSecondPerSecond(0, accel_steps_per_second_per_second)
+        dpiStepper.moveToRelativePositionInSteps(stepper_num, -46600, True)
+        dpiStepper.moveToHomeInSteps(stepper_num, 1, 1600 * 10,48000)
         dpiStepper.enableMotors(False)
 
-    # def setRampSpeed(self):
-    # def setStaircaseSpeed(self):
-    # def isBallAtBottomOfRamp(self):
-    # def isBallAtTopOfRamp(self):
+    def setRampSpeed(self, speed):
+        self.rampSpeed = speed
+
+    def setStaircaseSpeed(self, speed):
+        self.staircaseSpeed = speed
 
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.initialize()
+        dpiStepper.moveToHomeInSteps(stepper_num, 1, 2000,45000)
+
 
     def toggleGate(self):
         self.openGate()
@@ -167,12 +181,25 @@ class MainScreen(Screen):
         print("Move ramp up and down here")
 
     def auto(self):
+        self.toggleRamp()
+        self.toggleStaircase()
+        sleep(5)
+        self.openGate()
+        self.toggleStaircase()
+        Clock.schedule_interval(self.checkBall, 0.05)
         print("Run through one cycle of the perpetual motion machine")
 
+    def checkBall(self, dt = 0):
+        if dpiComputer.readDigitalIn(dpiComputer.IN_CONNECTOR__IN_0) == 0:
+            Clock.unschedule(self.checkBall)
+            self.auto()
+
     def setRampSpeed(self, speed):
+        self.RampSpeed = speed
         print("Set the ramp speed and update slider text")
 
     def setStaircaseSpeed(self, speed):
+        self.staircaseSpeed = speed
         print("Set the staircase speed and update slider text")
 
     def initialize(self):

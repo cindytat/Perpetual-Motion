@@ -20,7 +20,7 @@
 
         DPEAButton:
             id: auto
-            color: .180, 0.188, 0.980, 1 #yellow
+            color: 0.917, 0.796, 0.380, 1 #yellow
             text: "Start"
             center_x: root.width * 0.5
             y: root.height * 0.55
@@ -34,7 +34,7 @@
         # Turn on/off gate
         DPEAButton:
             id: gate
-            color: 0.917, 0.796, 0.380, 1 #blue
+            color:  .180, 0.188, 0.980, 1 #blue
             text: "Open Gate"
             center_x: root.width * 0.25
             y: root.height * 0.35
@@ -47,7 +47,7 @@
 
         DPEAButton:
             id: ramp
-            color: 0.917, 0.796, 0.380, 1 #blue
+            color:  .180, 0.188, 0.980, 1 #blue
             text: "Ramp to Top"
             center_x: root.width * 0.5
             y: root.height * 0.35
@@ -60,7 +60,7 @@
 
         DPEAButton:
             id: staircase
-            color: 0.917, 0.796, 0.380, 1 #blue
+            color: 0.180, 0.188, 0.980, 1 #blue
             text: "Staircase On"
             center_x: root.width * 0.75
             y: root.height * 0.35
@@ -116,7 +116,7 @@
 
         Label:
             id: rampSpeedLabel
-            text: 'Ramp Speed: ' + str(root.rampSpeed)
+            text: 'Ramp Speed: ' + str(rampSpeed.value)
             font_size: 40
             center_x: root.width * 0.22
             y: root.height * 0.15
@@ -124,7 +124,7 @@
 
         Label:
             id: staircaseSpeedLabel
-            text: 'Staircase Speed: ' + str(root.staircaseSpeed)
+            text: 'Staircase Speed: ' + str(staircaseSpeed.value)
             font_size: 40
             center_x: root.width * 0.20
             y: root.height * 0.05
