@@ -148,12 +148,14 @@ class MainScreen(Screen):
             self.stair = False
 
     def moveRamp(self):
-        speed_steps_per_second = 1600 * (8 * (self.rampSpeed/self.max_rampspeed) + 2)
+        speed_steps_per_second = (round(1600*(8 * (self.rampSpeed/self.max_rampspeed) + 2)))
         dpiStepper.enableMotors(True)
         dpiStepper.setSpeedInStepsPerSecond(0, speed_steps_per_second)
         dpiStepper.setAccelerationInStepsPerSecondPerSecond(0, accel_steps_per_second_per_second)
         dpiStepper.moveToRelativePositionInSteps(stepper_num, -46600, True)
         dpiStepper.moveToHomeInSteps(stepper_num, 1, 1600 * 10,48000)
+        dpiStepper.setSpeedInStepsPerSecond(0, speed_steps_per_second)
+        dpiStepper.setAccelerationInStepsPerSecondPerSecond(0, accel_steps_per_second_per_second)
         dpiStepper.enableMotors(False)
 
     def setRampSpeed(self, speed):
