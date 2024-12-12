@@ -148,7 +148,7 @@ class MainScreen(Screen):
             self.stair = False
 
     def moveRamp(self):
-        speed_steps_per_second = (round(1600*(8 * (self.rampSpeed/self.max_rampspeed) + 2)))
+        #speed_steps_per_second = (round(1600*(8 * (self.rampSpeed/self.max_rampspeed) + 2)))
         dpiStepper.enableMotors(True)
         dpiStepper.setSpeedInStepsPerSecond(0, speed_steps_per_second)
         dpiStepper.setAccelerationInStepsPerSecondPerSecond(0, accel_steps_per_second_per_second)
@@ -158,8 +158,11 @@ class MainScreen(Screen):
         dpiStepper.setAccelerationInStepsPerSecondPerSecond(0, accel_steps_per_second_per_second)
         dpiStepper.enableMotors(False)
 
-    def setRampSpeed(self, speed):
-        self.rampSpeed = speed
+    def setRampSpeed(self):
+        # self.rampSpeed = speed
+        global speed_steps_per_second
+        speed_steps_per_second = 1600* self.ids.rampSpeed.value
+        print(speed_steps_per_second)
 
     def setStaircaseSpeed(self, speed):
         self.staircaseSpeed = speed
@@ -196,9 +199,9 @@ class MainScreen(Screen):
             Clock.unschedule(self.checkBall)
             self.auto()
 
-    def setRampSpeed(self, speed):
-        self.RampSpeed = speed
-        print("Set the ramp speed and update slider text")
+    # def setRampSpeed(self, speed):
+    #     self.RampSpeed = speed
+    #     print("Set the ramp speed and update slider text")
 
     def setStaircaseSpeed(self, speed):
         self.staircaseSpeed = speed

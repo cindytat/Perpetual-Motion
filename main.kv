@@ -78,14 +78,14 @@
         Slider:
             id: rampSpeed
             orientation: 'horizontal'
-            min: 10
-            max: 200
+            min: 1
+            max: 10
             value: root.rampSpeed
             step: 1
             center_x: root.width * 0.6
             y: root.height * 0.15
             size_hint_x: 7
-            on_value: root.setRampSpeed(self.value)
+            on_value: root.setRampSpeed()
 
         Slider:
             id: staircaseSpeed
