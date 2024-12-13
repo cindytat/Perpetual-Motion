@@ -69,7 +69,7 @@ RAMP_LENGTH = 725
 # ////////////////////////////////////////////////////////////////
 class MyApp(App):
     def build(self):
-        self.title = "Perpetual Motion"
+        self.title = "Perpetual Motion machine"
         return sm
 
 
@@ -175,7 +175,7 @@ class MainScreen(Screen):
 
     def toggleGate(self):
         self.openGate()
-        print("Open and Close gate here")
+        print("Open and close gate here")
 
     def toggleStaircase(self):
         self.turnOnStaircase()
